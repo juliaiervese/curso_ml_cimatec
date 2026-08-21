@@ -1,6 +1,9 @@
 import pandas as pd
+from loguru import logger
 
 def create_features(data: pd.DataFrame) -> pd.DataFrame:
+
+    logger.info("Creating features...")
 
     data = data.copy()  # Cria uma cópia independente para evitar alterações no DataFrame original.
 

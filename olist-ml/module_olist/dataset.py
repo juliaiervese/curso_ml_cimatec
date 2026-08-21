@@ -83,7 +83,7 @@ def create_target(orders: pd.DataFrame) -> pd.DataFrame:
 
     return delivered_orders
 
-    def aggregate_items(items: pd.DataFrame) -> pd.DataFrame:
+def aggregate_items(items: pd.DataFrame) -> pd.DataFrame:
         # A tabela de itens possui uma linha para cada item presente no pedido.
         # Portanto, um mesmo order_id pode aparecer várias vezes.
         #
@@ -126,30 +126,30 @@ def create_target(orders: pd.DataFrame) -> pd.DataFrame:
         return items_agg
 
 
-    def create_dataset(orders, itens, costumers):
-        # Cria a variável-alvo do problema.
-        orders = create_target(orders)
+def create_dataset(orders, items, customers):
+    # Cria a variável-alvo do problema.
+    orders = create_target(orders)
 
 
-        # Agrega os itens para que cada pedido apareça apenas uma vez.
-        items_agg = aggregate_items(itens)
+    # Agrega os itens para que cada pedido apareça apenas uma vez.
+    items_agg = aggregate_items(items)
 
 
-        # Junta as tabelas de pedidos, clientes e itens em uma única base.
-        data = orders
-        data = data.merge(
-            items_agg,
-            on="order_id",
-            how="left",
-            validate='one-to-one'
-        )
-        data = data.merge(
-            customers[["customer_id", "customer_city", "customer_state"]],
-            on="customer_id",
-            how="left",
-            validate='one-to-one'
-        )
+    # Junta as tabelas de pedidos, clientes e itens em uma única base.
+    data = orders
+    data = data.merge(
+        items_agg,
+        on="order_id",
+        how="left",
+        validate="one_to_one",
+    )
+    data = data.merge(
+        customers[["customer_id", "customer_city", "customer_state"]],
+        on="customer_id",
+        how="left",
+        validate="many_to_one",
+    )
 
 
-        # Exibe as cinco primeiras linhas da base final.
-        return data
+    # Exibe as cinco primeiras linhas da base final.
+    return data
