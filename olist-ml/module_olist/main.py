@@ -1,8 +1,8 @@
-from pathlib import Path
-
-from module_olist.config import INTERIM_DATA_DIR, RAW_DATA_DIR
-
-from loguru import logger
+from module_olist.config import (
+    RAW_DATA_DIR,
+    INTERIM_DATA_DIR,
+    MODELS_DIR,
+)
 
 from module_olist.dataset import (
     load_data,
@@ -10,90 +10,124 @@ from module_olist.dataset import (
     save_dataset,
 )
 
-from module_olist.features import (
-    create_features,
+from module_olist.features import create_features
+
+from module_olist.modeling.split import split_data
+
+from module_olist.modeling.train import (
+    train_model,
 )
 
-from module_olist.modeling.evaluate import evaluate_models
-from module_olist.modeling.split import split_data
-from module_olist.modeling.train import train_model
+from module_olist.modeling.evaluate import (
+    evaluate_model,
+)
+
+from module_olist.modeling.cross_validation import (
+    cross_validate_models,
+)
+
+from loguru import logger
+
 
 def main():
 
-    logger.info("Starting Olist ML pipeline")
-
-
-    project_root = Path(__file__).resolve().parents[1]
-
-    raw_path = project_root / "data" / "raw"
- 
-    interim_path = (
-        project_root
-        / "data"
-        / "interim"
-        / "olist_interim.csv"
+    logger.info(
+        "Iniciando preparação do dataset..."
     )
-
-
-    # --------------------------------------------
-    # 1. Load raw data
-    # --------------------------------------------
 
     orders, items, customers = load_data(
-        orders_path=raw_path / "olist_orders_dataset.csv",
-        items_paths=raw_path / "olist_order_items_dataset.csv",
-        customers_path=raw_path / "olist_customers_dataset.csv",
+        orders_path=(
+            RAW_DATA_DIR
+            / "olist_orders_dataset.csv"
+        ),
+        items_path=(
+            RAW_DATA_DIR
+            / "olist_order_items_dataset.csv"
+        ),
+        customers_path=(
+            RAW_DATA_DIR
+            / "olist_customers_dataset.csv"
+        ),
     )
 
-
-    # --------------------------------------------
-    # 2. Create dataset
-    # --------------------------------------------
-
-    dataset = create_dataset(
-        orders=orders,
-        items=items,
-        customers=customers,
+    data = create_dataset(
+        orders,
+        items,
+        customers,
     )
 
-
-    logger.info(
-        f"Dataset after merge: {dataset.shape}"
-    )
-
-
-    # --------------------------------------------
-    # 3. Create features
-    # --------------------------------------------
-
-    dataset_features = create_features(
-        dataset
-    )
-
-
-    logger.info(
-        f"Dataset after features: {dataset_features.shape}"
-    )
-
-
-    # --------------------------------------------
-    # 4. Save interim with features
-    # --------------------------------------------
-
-    interim_path.parent.mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
+    data = create_features(data)
 
     save_dataset(
-        dataset=dataset_features,
-        output_path=interim_path,
+        data,
+        INTERIM_DATA_DIR
+        / "orders_dataset_refined.csv",
     )
 
+    # =============================================
+    # TRAIN / TEST
+    # =============================================
+
+    X_train, X_test, y_train, y_test = (
+        split_data(data)
+    )
+
+    # =============================================
+    # CROSS VALIDATION
+    # Seleciona modelo + threshold
+    # =============================================
+
+    (
+        best_model_name,
+        best_threshold,
+    ) = cross_validate_models(
+        X_train,
+        y_train,
+    )
+
+    logger.info(
+        f"Modelo escolhido: "
+        f"{best_model_name}"
+    )
+
+    logger.info(
+        f"Threshold escolhido: "
+        f"{best_threshold:.2f}"
+    )
+
+    # =============================================
+    # TREINAMENTO FINAL
+    # =============================================
+
+    model = train_model(
+        model_name=best_model_name,
+        threshold=best_threshold,
+        X_train=X_train,
+        y_train=y_train,
+        model_path=(
+            MODELS_DIR
+            / "best_model.joblib"
+        ),
+        metadata_path=(
+            MODELS_DIR
+            / "metadata.json"
+        ),
+    )
+
+    # =============================================
+    # TESTE FINAL
+    # =============================================
+
+    evaluate_model(
+        model=model,
+        model_name=best_model_name,
+        X_test=X_test,
+        y_test=y_test,
+        threshold=best_threshold,
+    )
 
     logger.success(
-        "Olist pipeline completed successfully"
+        "Pipeline executado com sucesso."
     )
 
 
