@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from module_olist.config import INTERIM_DATA_DIR, RAW_DATA_DIR
+
 from loguru import logger
 
 from module_olist.dataset import (
@@ -12,6 +14,9 @@ from module_olist.features import (
     create_features,
 )
 
+from module_olist.modeling.evaluate import evaluate_models
+from module_olist.modeling.split import split_data
+from module_olist.modeling.train import train_model
 
 def main():
 
