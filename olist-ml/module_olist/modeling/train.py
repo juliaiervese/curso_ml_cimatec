@@ -1,10 +1,9 @@
-# module_olist/modeling/train.py
-
 import json
 import joblib
 
 from loguru import logger
-from module_olist.modeling.pipeline import (
+
+from module_olist.pipeline import (
     create_gradient_boosting_pipeline,
     create_xgboost_pipeline,
     create_lightgbm_pipeline,
@@ -96,7 +95,7 @@ def train_model(
         "threshold_metric": "f1",
     }
 
-   with open(
+    with open(
         metadata_path,
         "w",
         encoding="utf-8",
@@ -108,9 +107,8 @@ def train_model(
             indent=4,
         )
 
-logger.success(
+    logger.success(
         f"Metadados salvos em: {metadata_path}"
     )
 
-
-return model
+    return model

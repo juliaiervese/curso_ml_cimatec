@@ -5,22 +5,18 @@ from module_olist.config import (
 )
 
 from module_olist.dataset import (
-    load_data,
+    load_dataset,
     create_dataset,
     save_dataset,
 )
 
 from module_olist.features import create_features
 
-from module_olist.modeling.split import split_data
+from module_olist.split import split_data
 
-from module_olist.modeling.train import (
-    train_model,
-)
+from module_olist.modeling.train import train_model
 
-from module_olist.modeling.evaluate import (
-    evaluate_model,
-)
+from module_olist.modeling.evaluate import evaluate_model
 
 from module_olist.modeling.cross_validation import (
     cross_validate_models,
@@ -28,14 +24,13 @@ from module_olist.modeling.cross_validation import (
 
 from loguru import logger
 
-
 def main():
 
     logger.info(
         "Iniciando preparação do dataset..."
     )
 
-    orders, items, customers = load_data(
+    orders, items, customers = load_dataset(
         orders_path=(
             RAW_DATA_DIR
             / "olist_orders_dataset.csv"

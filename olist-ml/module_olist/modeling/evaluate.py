@@ -1,4 +1,5 @@
 from loguru import logger
+
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -7,6 +8,7 @@ from sklearn.metrics import (
     roc_auc_score,
     average_precision_score,
 )
+
 
 def evaluate_model(
     model,
