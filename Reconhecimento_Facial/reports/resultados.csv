@@ -1,0 +1,11 @@
+arquivo,pessoa,status,distancia
+autorizado_01_teste.jpg,pessoa_01,liberado,0.2207
+autorizado_02_teste.jpg,pessoa_02,liberado,0.1634
+autorizado_03_teste.jpg,pessoa_03,liberado,0.1808
+autorizado_04_teste.jpg,pessoa_04,liberado,0.2268
+autorizado_05_teste.png,pessoa_05,liberado,0.1903
+desconhecido_01.jpg,,negado,0.7316
+desconhecido_02.jpg,,negado,0.8154
+desconhecido_03.jpg,,negado,0.6199
+desconhecido_04.jpg,,negado,0.6608
+desconhecido_05.jpg,,negado,0.7536

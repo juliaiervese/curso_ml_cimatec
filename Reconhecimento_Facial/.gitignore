@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+.ruff_cache/
+
+# Fotos de pessoas = dado biométrico (LGPD): não versionar
+data/raw/autorizados/*
+data/raw/teste/*
+data/processed/resultados/*
+models/*.pkl
+!**/.gitkeep

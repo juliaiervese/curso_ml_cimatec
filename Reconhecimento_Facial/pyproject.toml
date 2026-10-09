@@ -1,0 +1,28 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "reconhecimento_facial"
+version = "0.0.1"
+description = "Controle de acesso por reconhecimento facial com OpenCV e DeepFace."
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "deepface>=0.0.93",
+    "tf-keras",
+    "opencv-python",
+    "numpy",
+    "loguru",
+    "typer",
+    "python-dotenv",
+]
+
+[dependency-groups]
+dev = ["pytest", "ruff"]
+
+[tool.flit.module]
+name = "reconhecimento_facial"
+
+[tool.ruff]
+line-length = 99
