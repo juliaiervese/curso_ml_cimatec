@@ -6,6 +6,22 @@
 
 Brazilian e-commerce public dataset.
 
+## Etapas obrigatórias da disciplina
+
+### Aula 04 - Qualidade dos dados
+
+A etapa de qualidade dos dados foi implementada com um checklist automatizado
+para validar número de linhas, colunas, duplicatas, valores ausentes e tipos.
+
+O script de referência está em `notebooks/01_data_quality_assessment.py`.
+
+### Aula 12 - Active Learning
+
+A etapa de active learning foi adicionada com um exemplo mínimo de seleção
+visual de amostras mais incertas para revisão ou retraining.
+
+O script de referência está em `notebooks/02_active_learning_example.py`.
+
 ## Project Organization
 
 ```
